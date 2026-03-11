@@ -471,48 +471,48 @@ cannabis: [
 };
 
 function haversineMiles(lat1, lon1, lat2, lon2){
-const R=3958.8;
+const R = 3958.8;
 const toRad = deg => deg * Math.PI / 180;
-const dLat=toRad(lat2-lat1);
-const dLon=toRad(lon2-lon1);
-const a=Math.sin(dLat/2)**2 + Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon/2)**2;
-return 2 * R * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+const dLat = toRad(lat2 - lat1);
+const dLon = toRad(lon2 - lon1);
+const a = Math.sin(dLat / 2) ** 2 + Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) ** 2;
+return 2 * R * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 }
 
 function resolveLocation(){
-const zip=document.getElementById("zip").value.trim();
-if(zip && zipLookup[zip]) return {...zipLookup[zip], source:`ZIP ${zip}`};
+const zip = document.getElementById("zip").value.trim();
+if (zip && zipLookup[zip]) return {...zipLookup[zip], source:`ZIP ${zip}`};
 
-const lat=parseFloat(document.getElementById("lat").value);
-const lon=parseFloat(document.getElementById("lon").value);
-if(Number.isFinite(lat) && Number.isFinite(lon)) return {lat, lon, name:"Custom coordinates", source:"Lat/Lon"};
+const lat = parseFloat(document.getElementById("lat").value);
+const lon = parseFloat(document.getElementById("lon").value);
+if (Number.isFinite(lat) && Number.isFinite(lon)) return {lat, lon, name:"Custom coordinates", source:"Lat/Lon"};
 
 return null;
 }
 
 function nearestAmenity(loc, list){
-let best=null;
-for(const item of list){
-const distance=haversineMiles(loc.lat, loc.lon, item.lat, item.lon);
-if(!best || distance < best.distance) best={...item, distance};
+let best = null;
+for (const item of list){
+const distance = haversineMiles(loc.lat, loc.lon, item.lat, item.lon);
+if (!best || distance < best.distance) best = {...item, distance};
 }
 return best;
 }
 
 function findAmenities(){
-const loc=resolveLocation();
-const output=document.getElementById("output");
+const loc = resolveLocation();
+const output = document.getElementById("output");
 
-if(!loc){
-output.innerHTML='<div class="small">Enter a supported ZIP code, coordinates, or use your current location.</div>';
+if (!loc){
+output.innerHTML = '<div class="small">Enter a supported ZIP code, coordinates, or use your current location.</div>';
 return;
 }
 
-const gas=nearestAmenity(loc, amenities.gas);
-const groceries=nearestAmenity(loc, amenities.groceries);
-const starbucks=nearestAmenity(loc, amenities.starbucks);
-const rei=nearestAmenity(loc, amenities.rei);
-const cannabis=nearestAmenity(loc, amenities.cannabis);
+const gas = nearestAmenity(loc, amenities.gas);
+const groceries = nearestAmenity(loc, amenities.groceries);
+const starbucks = nearestAmenity(loc, amenities.starbucks);
+const rei = nearestAmenity(loc, amenities.rei);
+const cannabis = nearestAmenity(loc, amenities.cannabis);
 
 output.innerHTML = `
 <div class="small">Location source: <strong>${loc.source}</strong>${loc.name ? ` · ${loc.name}` : ""}</div>
@@ -535,7 +535,7 @@ output.innerHTML = `
 }
 
 function getLocation(){
-if(!navigator.geolocation) return;
+if (!navigator.geolocation) return;
 
 navigator.geolocation.getCurrentPosition(
 pos => {
@@ -545,7 +545,7 @@ document.getElementById("lon").value = pos.coords.longitude.toFixed(5);
 () => {
 document.getElementById("output").innerHTML = '<div class="small">Unable to read current location on this device.</div>';
 },
-{ enableHighAccuracy:true, timeout:10000, maximumAge:60000 }
+{enableHighAccuracy:true, timeout:10000, maximumAge:60000}
 );
 }
 </script>
